@@ -5,7 +5,7 @@ import {Page} from 'puppeteer';
 
 const formBodyPlugin = require('fastify-formbody');
 
-const PORT = 3000;
+const PORT = 8085;
 const PAGES_NUM = 5;
 const PAGE_TIMEOUT = 60000;
 
