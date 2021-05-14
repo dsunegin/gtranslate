@@ -1,7 +1,6 @@
 {
-  "name": "",
+  "name": "gtranslate",
   "version": "0.0.0",
-  "description": "",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "files": [
@@ -15,14 +14,30 @@
     "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
-    "prepare": "npm.cmd run compile",
-    "pretest": "npm.cmd run compile",
-    "posttest": "npm.cmd run lint"
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint",
+    "start": "node ."
   },
   "devDependencies": {
     "@types/node": "^14.14.44",
     "gts": "^3.1.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.0.3"
-  }
+  },
+  "dependencies": {
+    "@uyamazak/fastify-hc-pages": "^1.0.4",
+    "fastify": "^3.15.1",
+    "fastify-formbody": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsunegin/gtranslate.git"
+  },
+  "author": "Denis Sunegin <denis.sunegin@email.com> (https://github.com/dsunegin)",
+  "bugs": {
+    "url": "https://github.com/dsunegin/gtranslate/issues"
+  },
+  "homepage": "https://github.com/dsunegin/gtranslate#readme",
+  "description": ""
 }
