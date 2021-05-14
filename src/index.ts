@@ -87,9 +87,9 @@ server.post('/translate', async (request: FastifyRequest, reply) => {
     reply.send(result)
 });
 // Quick Test in browser.
-// Result MUST be a string: Вы понимаете, что ваше лицо уродливое?
+// Result MUST be a string: Привет, мой дорогой друг
 server.get('/translate', async (request: FastifyRequest, reply) => {
-    const result = await gTranslate('auto','ru','Apa kamu sadar kalau muka kamu itu jelek sekali?');
+    const result = await gTranslate('auto','ru','Hello my dear friend');
     reply.send(result)
 });
 
