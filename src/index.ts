@@ -1,12 +1,11 @@
-import Fastify, {FastifyInstance} from 'fastify'
-import {FastifyRequest} from "fastify/types/request"
-import {hcPages} from '@uyamazak/fastify-hc-pages'
+import Fastify, {FastifyInstance} from 'fastify';
+import {FastifyRequest} from "fastify/types/request";
+import {hcPages} from '@uyamazak/fastify-hc-pages';
+const formBodyPlugin = require('fastify-formbody');
 import {Page} from 'puppeteer';
 
-const formBodyPlugin = require('fastify-formbody');
-
 const PORT = 8085;
-const PAGES_NUM = 5;
+const PAGES_NUM = 1;
 const PAGE_TIMEOUT = 60000;
 
 const server: FastifyInstance = Fastify({});
@@ -42,6 +41,7 @@ const hcOpt: Object = {
      * @see https://pptr.dev/#?product=Puppeteer&version=v8.0.0&show=api-puppeteerlaunchoptions
      */
     launchOptions: {
+        //headless: false,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -59,22 +59,41 @@ interface RequestBody {
 const gTranslate = async (sl: string = 'auto', tl: string = 'ru', text: string = '') => {
     // Make result you need in callback function with Page
     return await server.runOnPage<string | null>(async (page: Page) => {
-
-        await page.goto(`https://translate.google.com/#view=home&op=translate&sl=${sl}&tl=${tl}`);
+        const goto_url = `https://translate.google.com/#view=home&op=translate&sl=${sl}&tl=${tl}`;
+        await page.goto(goto_url);
         await page.waitForSelector('h2.oBOnKe');
         await page.waitForTimeout(1000);
 
         // string that we want to translate and type it on the textarea
         if (text.length ==0) return '';
-        await page.type('div.D5aOJc.Hapztf', text);
+        //await page.type('div.D5aOJc.Hapztf', text);
+        //await page.focus('div.D5aOJc.Hapztf');
+
+        await page.evaluate((text) => {
+            const input = document.createElement('input');
+            document.body.appendChild(input);
+            input.value = text;
+            input.focus();
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+        },text);
+
+        await page.click('div.D5aOJc.Hapztf');
+        await page.waitForTimeout(500);
+        await page.keyboard.down('Control');
+        await page.keyboard.down('Shift');
+        await page.keyboard.press('KeyV');
+        await page.keyboard.up('Control');
+        await page.keyboard.up('Shift');
 
         // wait for the result container available
-        await page.waitForSelector('span.JLqJ4b.ChMk0b > span');
+        await page.waitForSelector('span.JLqJ4b > span');
         await page.waitForTimeout(3000);
 
         // get the result string (translated text)
         return await page.evaluate(() => {
-            return document.querySelectorAll('span.JLqJ4b.ChMk0b > span')[0].textContent;
+            return [...Array.from(document.querySelectorAll('span.JLqJ4b > span'))].map(row => row.textContent).join();
         });
     });
 
