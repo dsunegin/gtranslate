@@ -1,9 +1,9 @@
-# gtranslate - google translate proxy based on fastify web server
+# `gtranslate` - google translate proxy based on fastify web server
 
 #### Clone & Install Dependencies
 ```bash
 git clone https://github.com/dsunegin/gtranslate
-cd post-bankru
+cd gtranslate
 npm install
 ```
 
@@ -21,6 +21,7 @@ PAGES_NUM = 1;
 PAGE_TIMEOUT = 60000;
 BEARER = "bearer_1|bearer2|bearer_n"
 ```
+No Auth requered if BEARER not set.
 
 ## Running `gtranslate`
 
