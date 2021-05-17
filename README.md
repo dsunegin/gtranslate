@@ -7,11 +7,19 @@ cd post-bankru
 npm install
 ```
 
-Configure:
+Configure your env:
+
 ```
-const PORT = 8085;
-const PAGES_NUM = 1;
-const PAGE_TIMEOUT = 60000;
+cp .env.example .env
+```
+
+#### Specify environment:
+
+```
+PORT = 8085;
+PAGES_NUM = 1;
+PAGE_TIMEOUT = 60000;
+BEARER = "bearer_1|bearer2|bearer_n"
 ```
 
 ## Running `gtranslate`
