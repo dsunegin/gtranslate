@@ -3,10 +3,18 @@ import {FastifyRequest} from "fastify/types/request";
 import {hcPages} from '@uyamazak/fastify-hc-pages';
 const formBodyPlugin = require('fastify-formbody');
 import {Page} from 'puppeteer';
+const bearerAuthPlugin = require('fastify-bearer-auth');
+const envconf = require('dotenv').config();
 
-const PORT = 8085;
-const PAGES_NUM = 1;
-const PAGE_TIMEOUT = 60000;
+if (envconf.error) {
+    throw envconf.error;
+} // ERROR if Config .env file is missing
+
+// Default Config Values if not set in .env
+const PORT = process.env.PORT || 8085;
+const PAGES_NUM = process.env.PAGES_NUM || 3;
+const PAGE_TIMEOUT = process.env.PAGE_TIMEOUT || 60000;
+const keys: Array<string> = process.env.BEARER ? process.env.BEARER.split('|') : [''];
 
 const server: FastifyInstance = Fastify({});
 const hcOpt: Object = {
@@ -114,6 +122,7 @@ server.get('/translate', async (request: FastifyRequest, reply) => {
 const start = async () => {
     try {
         // Register this plugin
+        if (keys) await server.register(bearerAuthPlugin, {keys});
         await server.register(formBodyPlugin);
         await server.register(hcPages, hcOpt);
         await server.listen(PORT);
