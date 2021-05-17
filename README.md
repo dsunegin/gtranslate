@@ -3,7 +3,8 @@
 ##   
 *Notice
 
-Fastify hc-pages Plugin used in projec is written  for node 14.0
+Fastify hc-pages Plugin used in project is written  for node 14.0 and later.
+
 To avoid error in node version < 14.0 modify line 90:60 (hc-pages.js):
 
 const browser = await puppeteer_1.launch(launchOptions ?? defaultLaunchOptions);
@@ -23,13 +24,11 @@ cd post-bankru
 npm install
 ```
 
-Configure your env:
+Configure:
 ```
-
 const PORT = 8085;
 const PAGES_NUM = 1;
 const PAGE_TIMEOUT = 60000;
-
 ```
 
 ## Running `gtranslate`
