@@ -34,7 +34,7 @@ npm run compile
  
 You must have installed pm2 process manager to run pm2-gtranslate.sh script.
 
-##*Notice
+## *Notice
 
 Fastify hc-pages Plugin used in project is written  for node 14.0 and later.
 
