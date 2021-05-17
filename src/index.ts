@@ -67,7 +67,6 @@ const gTranslate = async (sl: string = 'auto', tl: string = 'ru', text: string =
         // string that we want to translate and type it on the textarea
         if (text.length ==0) return '';
         //await page.type('div.D5aOJc.Hapztf', text);
-        //await page.focus('div.D5aOJc.Hapztf');
 
         await page.evaluate((text) => {
             const input = document.createElement('input');
