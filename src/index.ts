@@ -10,11 +10,11 @@ if (envconf.error) {
     throw envconf.error;
 } // ERROR if Config .env file is missing
 
-// Default Config Values if not set in .env
-const PORT = process.env.PORT || 8085;
-const PAGES_NUM = process.env.PAGES_NUM || 3;
+// Default Config Values if not set in .env config file
+const PORT = process.env.PORT || 3000;
+const PAGES_NUM = process.env.PAGES_NUM || 1;
 const PAGE_TIMEOUT = process.env.PAGE_TIMEOUT || 60000;
-const keys: Array<string> = process.env.BEARER ? process.env.BEARER.split('|') : [''];
+const keys: Array<string> | null = process.env.BEARER ? process.env.BEARER.split('|') : null;
 
 const server: FastifyInstance = Fastify({});
 const hcOpt: Object = {
@@ -126,7 +126,8 @@ const start = async () => {
         await server.register(formBodyPlugin);
         await server.register(hcPages, hcOpt);
         await server.listen(PORT);
-
+        console.log(`Server listen on port: ${PORT}`);
+        
     } catch (err) {
         server.log.error(err);
         process.exit(1);
