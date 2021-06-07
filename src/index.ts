@@ -96,11 +96,11 @@ const gTranslate = async (sl: string = 'auto', tl: string = 'ru', text: string =
 
         // wait for the result container available
         await page.waitForSelector('span.JLqJ4b > span');
-        await page.waitForTimeout(3000);
+        await page.waitForTimeout(5000);
 
         // get the result string (translated text)
         return await page.evaluate(() => {
-            return [...Array.from(document.querySelectorAll('span.JLqJ4b > span'))].map(row => row.textContent).join();
+            return [...Array.from(document.querySelectorAll('span.JLqJ4b > span'))].map(row => row.textContent).join(' ');
         });
     });
 
