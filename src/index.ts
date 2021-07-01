@@ -4,8 +4,11 @@ import {hcPages} from '@uyamazak/fastify-hc-pages';
 const formBodyPlugin = require('fastify-formbody');
 import {Page} from 'puppeteer';
 const bearerAuthPlugin = require('fastify-bearer-auth');
-const envconf = require('dotenv').config();
+//const randomUseragent = require('random-useragent');
+//let UA_random = randomUseragent.getRandom();
 
+// Load custom .env file if CONFIG environment variable is set
+const envconf = process.env.CONFIG ? require('dotenv').config({ path: process.env.CONFIG }) : require('dotenv').config();
 if (envconf.error) {
     throw envconf.error;
 } // ERROR if Config .env file is missing
@@ -15,6 +18,9 @@ const PORT = process.env.PORT || 3000;
 const PAGES_NUM = process.env.PAGES_NUM || 1;
 const PAGE_TIMEOUT = process.env.PAGE_TIMEOUT || 60000;
 const keys: Array<string> | null = process.env.BEARER ? process.env.BEARER.split('|') : null;
+
+let UA_default ='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36';
+
 
 const server: FastifyInstance = Fastify({});
 const hcOpt: Object = {
@@ -27,7 +33,7 @@ const hcOpt: Object = {
         /**
          * @see https://pptr.dev/#?product=Puppeteer&version=v8.0.0&show=api-pagesetuseragentuseragent
          */
-        userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
+        userAgent: process.env.USER_AGENT ? process.env.USER_AGENT : UA_default,
         /**
          * @see https://pptr.dev/#?product=Puppeteer&version=v8.0.0&show=api-pagesetdefaulttimeouttimeout
          */
@@ -69,7 +75,8 @@ const gTranslate = async (sl: string = 'auto', tl: string = 'ru', text: string =
     return await server.runOnPage<string | null>(async (page: Page) => {
         const goto_url = `https://translate.google.com/#view=home&op=translate&sl=${sl}&tl=${tl}`;
         await page.goto(goto_url);
-        await page.waitForSelector('h2.oBOnKe');
+        //await page.waitForSelector('h2.oBOnKe');
+        await page.waitForSelector('div.D5aOJc.Hapztf');
         await page.waitForTimeout(1000);
 
         // string that we want to translate and type it on the textarea
@@ -100,7 +107,11 @@ const gTranslate = async (sl: string = 'auto', tl: string = 'ru', text: string =
 
         // get the result string (translated text)
         return await page.evaluate(() => {
-            return [...Array.from(document.querySelectorAll('span.JLqJ4b > span'))].map(row => row.textContent).join(' ');
+            let el = document.querySelector('div.BdDRKe > div');
+            const attr = 'data-text';
+
+            return el?.hasAttribute(attr) ? el.getAttribute(attr) : '' ;
+            //return [...Array.from(document.querySelectorAll('span.JLqJ4b > span'))].map(row => row.textContent).join(' ');
         });
     });
 
